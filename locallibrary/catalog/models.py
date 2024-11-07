@@ -36,6 +36,12 @@ class Book(models.Model):
         """
         return reverse('book-detail', args=[str(self.id)])
 
+    def display_genre(self):
+
+        return ', '.join([genre.name for genre in self.genre.all()[:3]])
+
+    display_genre.short_description = 'Genre'
+
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Уникальный идентификатор конкретной книги во всей библиотеке')
     book = models.ForeignKey('Book', on_delete=SET_NULL, null=True)
