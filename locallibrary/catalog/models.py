@@ -20,6 +20,26 @@ class Genre(models.Model):
         """
         return self.name
 
+class Publisher(models.Model):
+
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        help_text="Введите название издания (например, Penguin Classics, Альфа-книга)"
+    )
+    publication_city = models.CharField(
+        max_length=100,
+        help_text="Введите город выпуска издания (например, Москва, Нью-Йорк)"
+    )
+
+
+    def get_absolute_url(self):
+        """Возвращает URL для доступа к конкретному экземпляру издания."""
+        return reverse('publisher-detail', args=[str(self.id)])
+
+    def __str__(self):
+        return self.name
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author',on_delete=models.SET_NULL, null=True )
@@ -88,6 +108,19 @@ class Author(models.Model):
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
 
-
     def __str__(self):
         return '%s, %s' % (self.last_name, self.first_name)
+
+class Language(models.Model):
+    """Model representing a Language (e.g. English, French, Japanese, etc.)"""
+    name = models.CharField(max_length=200,
+                            unique=True,
+                            help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
+
+    def get_absolute_url(self):
+        """Returns the url to access a particular language instance."""
+        return reverse('language-detail', args=[str(self.id)])
+
+    def __str__(self):
+        """String for representing the Model object (in Admin site etc.)"""
+        return self.name
