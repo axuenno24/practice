@@ -19,49 +19,50 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2">
+
           {% block sidebar %}
             <ul class="sidebar-nav">
+              <li><a href="{% url 'index' %}">Домой</a></li>
+              <li><a href="{% url 'books' %}">Книги</a></li>
+              <li><a href="{% url 'authors' %}">Авторы</a></li>
+              <li><a href="{% url 'languages' %}">Языки</a></li>
+              <br>
+
               {% if user.is_authenticated %}
-              <li>User: {{ user.get_username }}</li>
-              <li><a href="{% url 'my-borrowed' %}">My Borrowed</a></li>
-              <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+
+              <li>Пользователь: {{ user.get_username }}</li>
+              <li><a href="{% url 'my-borrowed' %}">Мои заброннированные книги</a></li>
+              <form id="logout-form" method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                <button type="submit">Выйти</button>
+              </form>
               {% else %}
-              <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+                <form id="login-form" method="post" action="{% url 'login' %}">
+                  {% csrf_token %}
+                <button type="submit">Войти</button>
+              </form>
               {% endif %}
-              <li><a href="{% url 'index' %}">Home</a></li>
-              <li><a href="{% url 'books' %}">All books</a></li>
-              <li><a href="">All authors</a></li>
+
+                {% if user.is_staff %}
+       <hr>
+       <ul class="sidebar-nav">
+       <li>Выберите раздел</li>
+       <li><a href="{% url 'all-borrowed' %}">Забронированные</a></li>
+       {% if perms.catalog.add_author %}
+         <li><a href="{% url 'author-create' %}">Добавить автора</a></li>
+       {% endif %}
+       {% if perms.catalog.add_book %}
+       <li><a href="{% url 'book-create' %}">Добавить книгу</a></li>
+       {% endif %}
+           {% if perms.catalog.add_book %}
+       <li><a href="{% url 'language-create' %}">Добавить язык</a></li>
+       {% endif %}
+       {% endif %}
             </ul>
-            {% if user.is_authenticated %}
-              <li>User: {{ user.get_username }}</li>
-              <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
-            {% else %}
-              <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
-             {% endif %}
-             </ul>
           {% endblock %}
-        </div>
+
+        </ul></div>
         <div class="col-sm-10 ">{% block content %}{% endblock %}</div>
-
-{% block pagination %}
-  {% if is_paginated %}
-    <div class="pagination">
-      <span class="page-links">
-        {% if page_obj.has_previous %}
-          <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-        <span class="page-current">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-        {% if page_obj.has_next %}
-          <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-      </span>
-    </div>
-  {% endif %}
-{% endblock %}
-
-
       </div>
     </div>
   </body>

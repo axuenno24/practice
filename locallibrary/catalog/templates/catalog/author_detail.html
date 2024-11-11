@@ -19,10 +19,10 @@
 
   {% if user.is_staff %}
           <button>
-              <a href="{% url 'author-update' author.id %}">обновить автора</a>
+              <a href="{% url 'author-update' author.id %}">Обновить автора</a>
           </button>
         <button>
-              <a href="{% url 'author-delete' author.id %}">удалить автора</a>
+              <a href="{% url 'author-delete' author.id %}">Удалить автора</a>
           </button>
     {% endif %}
 

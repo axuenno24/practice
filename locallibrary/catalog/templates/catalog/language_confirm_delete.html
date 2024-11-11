@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Удалить язык: {{ language }}</h1>
+
+<p>Уверены?</p>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <input type="submit" action="" value="да, удоли">
+</form>
+
+{% endblock %}
