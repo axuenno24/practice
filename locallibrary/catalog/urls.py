@@ -21,6 +21,7 @@ urlpatterns = [
     path('language/create/', views.LanguageCreate.as_view(), name='language-create'),
     path('language/<int:pk>/update/', views.LanguageUpdate.as_view(), name='language-update'),
     path('language/<int:pk>/delete/', views.LanguageDelete.as_view(), name='language-delete'),
+    path('reserve-book/', views.reserve_book, name='reserve-book'),
 ]
 
 

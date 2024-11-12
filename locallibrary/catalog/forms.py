@@ -20,3 +20,14 @@ class RenewBookForm(forms.Form):
 
         # Помните, что всегда надо возвращать "очищенные" данные.
         return data
+
+from django import forms
+from .models import BookInstance
+
+class BookReserveForm(forms.ModelForm):
+    class Meta:
+        model = BookInstance
+        fields = ['status']
+
+
+

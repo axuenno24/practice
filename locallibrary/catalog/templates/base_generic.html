@@ -56,6 +56,10 @@
        {% endif %}
            {% if perms.catalog.add_book %}
        <li><a href="{% url 'language-create' %}">Добавить язык</a></li>
+           {% endif %}
+           {% if perms.catalog.add_book %}
+        <li><a href="{% url 'reserve-book' %}">Забронировать книгу</a></li>
+
        {% endif %}
        {% endif %}
             </ul>

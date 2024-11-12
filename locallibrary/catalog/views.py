@@ -9,11 +9,13 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import datetime
-from .forms import RenewBookForm
+from .forms import RenewBookForm, BookReserveForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Author
-
+from django.views import View
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     """
@@ -190,3 +192,27 @@ class LanguageDelete(PermissionRequiredMixin, DeleteView):
     model = Language
     success_url = reverse_lazy('languages')
     permission_required = 'catalog.delete_language'
+
+def reserve_book(request):
+    if request.method == 'POST':
+        form = BookReserveForm(request.POST)
+        if form.is_valid():
+            book_title = form.cleaned_data['book_title']
+            try:
+                # Найти книгу по названию
+                book = Book.objects.get(title__iexact=book_title)
+                # Создать бронирование, если статус позволяет
+                book_instance = BookInstance.objects.filter(book=book, status='a').first()
+                if book_instance:
+                    book_instance.status = 'r'
+                    book_instance.save()
+                    messages.success(request, f'Книга "{book_title}" успешно забронирована!')
+                else:
+                    messages.error(request, 'Эта книга уже забронирована.')
+                return redirect('reserve-book')
+            except Book.DoesNotExist:
+                messages.error(request, 'Книга с таким названием не найдена.')
+    else:
+        form = BookReserveForm()
+
+    return render(request, 'catalog/reserve_book.html', {'form': form})
