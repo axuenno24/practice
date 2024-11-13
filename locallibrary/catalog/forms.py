@@ -1,5 +1,5 @@
 from django import forms
-
+from .models import BookInstance
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import datetime #for checking renewal date range.
@@ -21,10 +21,10 @@ class RenewBookForm(forms.Form):
         # Помните, что всегда надо возвращать "очищенные" данные.
         return data
 
-from django import forms
-from .models import BookInstance
 
-class BookReserveForm(forms.ModelForm):
+
+class BookReserveForm(forms.Form):
+    book_title = forms.CharField(label="Название книги", max_length=100)
     class Meta:
         model = BookInstance
         fields = ['status']
